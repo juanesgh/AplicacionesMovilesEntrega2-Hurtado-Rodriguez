@@ -11,5 +11,8 @@
         <item
             android:id="@+id/nav_third_fragment"
             android:title="All Ingredients" />
+        <item
+            android:id="@+id/aux"
+            android:title="aux" />
     </group>
 </menu>
