@@ -95,17 +95,28 @@ public class RecipesFragment extends Fragment {
             public void run() {
 
                 final List<Recipe> recipes = db.recipeDao().getAllRecipes();
-                List<String> your_array_list = new ArrayList<String>();
+                List<String> recipeNames= new ArrayList<String>();
+                final List<Integer> recipeIds= new ArrayList<Integer>();
                 for (int i=0; i<recipes.size(); i++) {
                     String aux = recipes.get(recipes.size()-i-1).getName();
-                    your_array_list.add(aux);
+                    recipeNames.add(aux);
+                    Integer auxi = recipes.get(recipes.size()-i-1).getId();
+                    recipeIds.add(auxi);
                 }
-                arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1,your_array_list );
+                arrayAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_list_item_1, recipeNames );
                 Handler mainHandler = new Handler(getActivity().getMainLooper());
                 mainHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         lv.setAdapter(arrayAdapter);
+                        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                Intent intent = new Intent(getActivity(), DisplayRecipeRegular.class);
+                                intent.putExtra("recipeId", String.valueOf(recipeIds.get(i)));
+                                startActivity(intent);
+                            }
+                        });
                     }
                 });
             }

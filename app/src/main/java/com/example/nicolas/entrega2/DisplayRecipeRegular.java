@@ -1,14 +1,10 @@
 package com.example.nicolas.entrega2;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.nicolas.entrega2.db.AppDatabase;
 import com.example.nicolas.entrega2.db.Ingredient;
@@ -18,12 +14,11 @@ import com.example.nicolas.entrega2.db.RecipeIngredient;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DisplayRecipe extends AppCompatActivity {
+public class DisplayRecipeRegular extends AppCompatActivity {
     private AppDatabase db;
     private TextView tvT;
     private TextView tvD;
-    private TextView tvA;
-    private TextView tvM;
+    private TextView tvI;
     private TextView tvS;
     private TextView tvPT;
     private TextView tvN;
@@ -31,17 +26,15 @@ public class DisplayRecipe extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_recipe);
+        setContentView(R.layout.activity_display_recipe_regular);
         db = AppDatabase.getDatabase(this);
         tvT = (TextView) findViewById(R.id.tvTitle);
         tvD = (TextView) findViewById(R.id.tvDescription);
-        tvA = (TextView) findViewById(R.id.tvAvailableIngredients);
-        tvM = (TextView) findViewById(R.id.tvMissingIngredients);
+        tvI = (TextView) findViewById(R.id.tvIngredients);
         tvS = (TextView) findViewById(R.id.tvServings);
         tvPT = (TextView) findViewById(R.id.tvPreparationTime);
         tvN = (TextView) findViewById(R.id.tvNationality);
 
-        final ArrayList<Integer> ids = (ArrayList<Integer>) getIntent().getSerializableExtra("ingredientIds");
         final String recipeId = (String) getIntent().getStringExtra("recipeId");
         new Thread(new Runnable() {
             @Override
@@ -55,19 +48,11 @@ public class DisplayRecipe extends AppCompatActivity {
                 Integer preparationTime = recipe.getPreparation_time();
                 final String preparationText = "Preparation Time: " + String.valueOf(preparationTime) + " minutes.";
                 final String nationality = "Nationality: " + recipe.getNationality();
-
                 List<RecipeIngredient> recipeIngredients = db.recipeIngredientDao().fetchIngredientsByRecipeId(Integer.valueOf(recipeId));
-                final StringBuilder available = new StringBuilder();
-                final StringBuilder missing = new StringBuilder();
+                final StringBuilder ingredients = new StringBuilder();
                 for (int i=0; i<recipeIngredients.size(); i++) {
-                    if (ids.contains(recipeIngredients.get(i).getIngredientId())){
-                        Ingredient auxi = db.ingredientDao().fetchOneIngredientbyId(recipeIngredients.get(i).getIngredientId());
-                        available.append("-"+auxi.getName() + "\n");
-                    }
-                    else {
-                        Ingredient auxi = db.ingredientDao().fetchOneIngredientbyId(recipeIngredients.get(i).getIngredientId());
-                        missing.append("-"+auxi.getName() + "\n");
-                    }
+                    Ingredient auxi = db.ingredientDao().fetchOneIngredientbyId(recipeIngredients.get(i).getIngredientId());
+                    ingredients.append("-"+auxi.getName() + "\n");
                 }
 
                 Handler mainHandler = new Handler(getMainLooper());
@@ -76,8 +61,7 @@ public class DisplayRecipe extends AppCompatActivity {
                     public void run() {
                         tvT.setText(title);
                         tvD.setText(description);
-                        tvA.setText(available);
-                        tvM.setText(missing);
+                        tvI.setText(ingredients);
                         tvS.setText(servingsText);
                         tvPT.setText(preparationText);
                         if (recipe.getNationality() == null){

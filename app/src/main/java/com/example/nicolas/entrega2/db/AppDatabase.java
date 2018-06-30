@@ -34,10 +34,10 @@ public abstract class AppDatabase extends RoomDatabase {
                                             Ingredient i2 =new Ingredient("Grinded Meat");
                                             Ingredient i3 =new Ingredient("Bread");
                                             Ingredient i4 =new Ingredient("Sausage");
-                                            Recipe r1 = new Recipe( "Hard Boiled Egg","-Boil a pot of water over high heat. \n-Reduce the heat to low, add eggs. \n-Cook for 5 minutes.\n-Drain, cool in water, peel.");
-                                            Recipe r2 = new Recipe( "Grinded Meat Hamburguer","-Make patties from the grilled meat.\n-Cook the patties. \n-Place the patties on the bread. \n-Add condiments.");
-                                            Recipe r3 = new Recipe( "Hotdog","-Boil a pot of water.\n-Add the sausages. \n-Wait 5 minutes. \n-Drain, place the sausages on the bread.\n-Add condiments.");
-                                            Recipe r4 = new Recipe( "Scrambled Eggs on Bread","-Break eggs and put on frying pan.\n-Cook until no further liquid parts visible. \n-Serve on the bread.");
+                                            Recipe r1 = new Recipe( "Hard Boiled Egg","Boil a pot of water over high heat. Reduce the heat to low, add eggs. Cook for 5 minutes. Drain, cool in water, peel.",2,10);
+                                            Recipe r2 = new Recipe( "Grinded Meat Hamburguer","Make patties from the grilled meat. Cook the patties. Place the patties on the bread. Add condiments.",2,10);
+                                            Recipe r3 = new Recipe( "Hotdog","Boil a pot of water. Add the sausages. Wait 5 minutes. Drain, place the sausages on the bread. Add condiments.",2,10);
+                                            Recipe r4 = new Recipe( "Scrambled Eggs on Bread","Break eggs and put on frying pan. Cook until no further liquid parts visible. Serve on the bread.",2,10);
                                             RecipeIngredient ri1 = new RecipeIngredient(1,1);
                                             RecipeIngredient ri2 = new RecipeIngredient(2,2);
                                             RecipeIngredient ri3 = new RecipeIngredient(2,3);

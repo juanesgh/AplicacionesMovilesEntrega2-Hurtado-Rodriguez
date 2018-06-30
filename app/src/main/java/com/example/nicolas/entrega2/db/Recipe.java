@@ -18,9 +18,22 @@ public class Recipe {
     @NonNull
     private String description;
 
-    public Recipe(String name, String description) {
+    @ColumnInfo(name = "nationality")
+    private String nationality;
+
+    @ColumnInfo(name = "servings")
+    @NonNull
+    private Integer servings;
+
+    @ColumnInfo(name = "preparation_time")
+    @NonNull
+    private Integer preparation_time;
+
+    public Recipe(String name, String description, Integer servings, Integer preparation_time) {
         this.name = name;
         this.description = description;
+        this.servings = servings;
+        this.preparation_time = preparation_time;
     }
 
     public void setId(int id) {
@@ -45,5 +58,29 @@ public class Recipe {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setNationality(String nationality) {
+        this.nationality = nationality;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public void setServings(Integer servings) {
+        this.servings = servings;
+    }
+
+    public Integer getServings() {
+        return servings;
+    }
+
+    public void setPreparation_time(Integer preparation_time) {
+        this.preparation_time = preparation_time;
+    }
+
+    public Integer getPreparation_time() {
+        return preparation_time;
     }
 }

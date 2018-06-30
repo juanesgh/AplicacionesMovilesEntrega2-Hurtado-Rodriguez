@@ -19,7 +19,8 @@
         <activity android:name=".RecipeIngredientActivity" />
         <activity android:name=".DisplayRecipe" />
         <activity android:name=".search_recipes_by_ingredients" />
-        <activity android:name=".SearchRecipeByIngredients"></activity>
+        <activity android:name=".SearchRecipeByIngredients" />
+        <activity android:name=".DisplayRecipeRegular"></activity>
     </application>
 
 </manifest>
