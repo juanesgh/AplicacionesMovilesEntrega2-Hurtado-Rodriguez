@@ -59,9 +59,6 @@ public class MainActivity extends AppCompatActivity {
                             fragment = new RecipesFragment();
                         } else if (id == R.id.nav_third_fragment) {
                             fragment = new IngredientsFragment();
-                        } else if (id == R.id.aux) {
-                            Intent intent = new Intent(getApplicationContext(), SearchRecipeByIngredients.class);
-                            startActivity(intent);
                         }
 
                         if (fragment != null) {

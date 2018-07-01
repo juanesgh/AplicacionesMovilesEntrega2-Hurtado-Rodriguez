@@ -27,7 +27,6 @@ import java.util.List;
  */
 public class SearchRecipesFragment extends Fragment {
     private Context context;
-    private GridListAdapter adapter;
     private ArrayList<String> arrayList;
     private List<Integer> idsList;
 
@@ -49,60 +48,19 @@ public class SearchRecipesFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadListView(view);
         onClickEvent(view);
     }
 
-    private void loadListView(View view) {
-        final ListView listView = (ListView) view.findViewById(R.id.list_view);
-        final AppDatabase db = AppDatabase.getDatabase(getActivity());
-        arrayList = new ArrayList<>();
-        idsList = new ArrayList<>();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-                final List<Ingredient> ingredients = db.ingredientDao().getAllIngredients();
-                for (int i=0; i<ingredients.size(); i++) {
-                    String aux = ingredients.get(i).getName();
-                    Integer auxi = ingredients.get(i).getId();
-                    arrayList.add(aux);
-                    idsList.add(auxi);
-                }
-                Handler mainHandler = new Handler(getActivity().getMainLooper());
-                mainHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter = new GridListAdapter(context, arrayList, true);
-                        listView.setAdapter(adapter);
-                    }
-                });
-            }
-        }) .start();
-
-
-    }
 
     private void onClickEvent(View view) {
-        view.findViewById(R.id.search_button).setOnClickListener(new View.OnClickListener() {
+
+        view.findViewById(R.id.Search_Ingredients).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SparseBooleanArray selectedRows = adapter.getSelectedIds();
-                List<Integer> selectedIdsList = new ArrayList<>();
-                if (selectedRows.size() > 0) {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (int i = 0; i < selectedRows.size(); i++) {
-                        if (selectedRows.valueAt(i)) {
-                            Integer selectedRowLabel = idsList.get(selectedRows.keyAt(i));
-                            selectedIdsList.add(selectedRowLabel);
-                            stringBuilder.append(selectedRowLabel + "\n");
-                        }
-                    }
-                    Intent intent = new Intent(getActivity(), RecipeIngredientActivity.class);
-                    intent.putExtra("ids", (Serializable) selectedIdsList);
+                    Intent intent = new Intent(getActivity(), SearchRecipeByIngredients.class);
                     startActivity(intent);
                 }
-            }
         });
     }
 }
