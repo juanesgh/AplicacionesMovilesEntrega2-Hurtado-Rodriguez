@@ -22,7 +22,8 @@
         <activity android:name=".SearchRecipeByIngredients" />
         <activity android:name=".DisplayRecipeRegular" />
         <activity android:name=".AddNewRecipe" />
-        <activity android:name=".SearchRecipeByName"></activity>
+        <activity android:name=".SearchRecipeByName" />
+        <activity android:name=".SearchRecipeByPreparationTime"></activity>
     </application>
 
 </manifest>

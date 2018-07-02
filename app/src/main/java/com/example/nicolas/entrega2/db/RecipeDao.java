@@ -18,6 +18,9 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipe WHERE name LIKE :title")
     List<Recipe> fetchRecipesbyTitle (String title);
 
+    @Query("SELECT * FROM recipe WHERE preparation_time BETWEEN :low AND :high ")
+    List<Recipe> fetchRecipesbyTime (Integer low, Integer high);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Recipe... recipes);
 

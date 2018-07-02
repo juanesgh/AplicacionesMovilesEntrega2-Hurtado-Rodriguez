@@ -162,7 +162,7 @@ public class AddNewRecipe extends AppCompatActivity {
                         String desc = etI.getText().toString();
                         Integer prepTime = Integer.valueOf(etPT.getText().toString());
                         Integer servings = Integer.valueOf(etS.getText().toString());
-                        final Recipe newRecipe = new Recipe(title,desc,prepTime,servings);
+                        final Recipe newRecipe = new Recipe(title,desc,servings,prepTime);
                         if (!"None".equals(sp.getSelectedItem().toString())){
                             newRecipe.setNationality(sp.getSelectedItem().toString());
                         }
@@ -224,51 +224,51 @@ public class AddNewRecipe extends AppCompatActivity {
 
     //Funcion para agregar ingredientes a la base de datos.
     public void newIngredientEvent(String ingredient_to_add){
-        AlertDialog.Builder altdial = new AlertDialog.Builder(AddNewRecipe.this);
-        final String newIngredient = ingredient_to_add;
-        altdial.setMessage("'"+ingredient_to_add+"' was not found on the Database, do you want to add it?").setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                //Se agrega ingrediente a la base de datos.
-                                Ingredient newIn = new Ingredient(newIngredient);
-                                long idlong = db.ingredientDao().insert(newIn);
-                                int idInt = new BigDecimal(idlong).intValueExact();
+        if (ingredient_to_add.length() > 0){
+            AlertDialog.Builder altdial = new AlertDialog.Builder(AddNewRecipe.this);
+            final String newIngredient = ingredient_to_add;
+            altdial.setMessage("'"+ingredient_to_add+"' was not found on the Database, do you want to add it?").setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //Se agrega ingrediente a la base de datos.
+                                    Ingredient newIn = new Ingredient(newIngredient);
+                                    long idlong = db.ingredientDao().insert(newIn);
+                                    int idInt = new BigDecimal(idlong).intValueExact();
 
-                                //Se agrega el ingrediente nuevo a la lista de ingredientes de la receta.
-                                addIngredientIdsList.add(idInt);
-                                addIngredientNamesList.add(newIngredient);
+                                    //Se agrega el ingrediente nuevo a la lista de ingredientes de la receta.
+                                    addIngredientIdsList.add(idInt);
+                                    addIngredientNamesList.add(newIngredient);
 
-                                //Se agrega el ingrediente a la lista de ingredientes del ACTV.
-                                ingredientIdList.add(idInt);
-                                ingredientNameList.add(newIngredient);
+                                    //Se agrega el ingrediente a la lista de ingredientes del ACTV.
+                                    ingredientIdList.add(idInt);
+                                    ingredientNameList.add(newIngredient);
 
-                                //Se vuelve a poblar la lista de ingredientes y el ACTV.
-                                Handler mainHandler = new Handler(getMainLooper());
-                                mainHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        populateIngredientList();
-                                        populateAutoCompleteTextView();
-                                    }
-                                });
-                            }
-                        }).start();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                                    //Se vuelve a poblar la lista de ingredientes y el ACTV.
+                                    Handler mainHandler = new Handler(getMainLooper());
+                                    mainHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            populateIngredientList();
+                                            populateAutoCompleteTextView();
+                                        }
+                                    });
+                                }
+                            }).start();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
-        AlertDialog alert = altdial.create();
-        alert.setTitle("Add Ingredient");
-        alert.show();
-
-
+                        }
+                    });
+            AlertDialog alert = altdial.create();
+            alert.setTitle("Add Ingredient");
+            alert.show();
+        }
     }
 }
