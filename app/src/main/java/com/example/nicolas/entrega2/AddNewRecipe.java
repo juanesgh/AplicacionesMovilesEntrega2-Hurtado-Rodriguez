@@ -199,14 +199,6 @@ public class AddNewRecipe extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "The Recipe must have at least one Ingredient.",
                             Toast.LENGTH_LONG).show();
                 }
-
-
-
-
-
-
-
-
             }
         });
     }

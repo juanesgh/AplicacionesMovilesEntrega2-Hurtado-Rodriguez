@@ -15,6 +15,9 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipe WHERE id = :id")
     Recipe fetchOneRecipebyId (int id);
 
+    @Query("SELECT * FROM recipe WHERE name LIKE :title")
+    List<Recipe> fetchRecipesbyTitle (String title);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Recipe... recipes);
 

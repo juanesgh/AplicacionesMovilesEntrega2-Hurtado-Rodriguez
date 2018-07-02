@@ -27,8 +27,6 @@ import java.util.List;
  */
 public class SearchRecipesFragment extends Fragment {
     private Context context;
-    private ArrayList<String> arrayList;
-    private List<Integer> idsList;
 
     public SearchRecipesFragment() {
     }
@@ -61,6 +59,13 @@ public class SearchRecipesFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), SearchRecipeByIngredients.class);
                     startActivity(intent);
                 }
+        });
+        view.findViewById(R.id.Search_Titles).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SearchRecipeByName.class);
+                startActivity(intent);
+            }
         });
     }
 }

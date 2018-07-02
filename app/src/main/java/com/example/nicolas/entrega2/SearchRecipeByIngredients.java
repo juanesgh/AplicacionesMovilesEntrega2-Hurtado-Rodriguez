@@ -21,25 +21,35 @@ import java.util.List;
 
 public class SearchRecipeByIngredients extends AppCompatActivity {
 
-    private ArrayList<String> arrayList;
+    private ArrayList<String> namesList;
     private List<Integer> idsList;
     private List<Integer> searchIds;
     private List<String> searchIdsNames;
+
+    private AutoCompleteTextView actv;
+    private ListView lv;
+
+    private AppDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_recipe_by_ingredients);
+        db = AppDatabase.getDatabase(getApplicationContext());
+        
+        // Inicio listas vacias.
+        namesList = new ArrayList<>();
+        idsList = new ArrayList<>();
+        searchIds = new ArrayList<>();
+        searchIdsNames = new ArrayList<>();
+
+        actv = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        lv = (ListView) findViewById(R.id.list_view);
+
         loadAutoCompleteTextView();
         onClickEvent();
     }
     private void loadAutoCompleteTextView() {
-        final ListView listView = (ListView) findViewById(R.id.list_view);
-        final AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
-        // Inicio listas vacias.
-        arrayList = new ArrayList<>();
-        idsList = new ArrayList<>();
-        searchIds = new ArrayList<>();
-        searchIdsNames = new ArrayList<>();
         //Thread para leer los ingredientes de la base de datos.
         new Thread(new Runnable() {
             @Override
@@ -51,7 +61,7 @@ public class SearchRecipeByIngredients extends AppCompatActivity {
                 for (int i = 0; i < ingredients.size(); i++) {
                     String aux = ingredients.get(i).getName();
                     Integer auxi = ingredients.get(i).getId();
-                    arrayList.add(aux);
+                    namesList.add(aux);
                     idsList.add(auxi);
                 }
                 //lleno el autocompletetextview con los ingredientes.
@@ -60,8 +70,7 @@ public class SearchRecipeByIngredients extends AppCompatActivity {
                     @Override
                     public void run() {
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                                (getBaseContext(), android.R.layout.select_dialog_item, arrayList);
-                        AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+                                (getBaseContext(), android.R.layout.select_dialog_item, namesList);
                         actv.setThreshold(1);
                         actv.setAdapter(adapter);
                     }
@@ -74,13 +83,11 @@ public class SearchRecipeByIngredients extends AppCompatActivity {
         findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
-                ListView lv = (ListView) findViewById(R.id.list_view);
                 String s = actv.getText().toString();
-
+                s = s.toLowerCase();
                 //Si el ingrediente existe, intenta agregarlo.
-                if (arrayList.contains(s)) {
-                    Integer in = arrayList.indexOf(s);
+                if (namesList.contains(s)) {
+                    Integer in = namesList.indexOf(s);
                     Integer id = idsList.get(in);
                     //Si el ingrediente no esta en la lista, lo agrega.
                     if (!searchIds.contains(id)) {

@@ -25,7 +25,7 @@
         android:text="Ingredients" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/Search_Titles"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

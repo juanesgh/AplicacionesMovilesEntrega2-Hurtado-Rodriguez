@@ -29,7 +29,6 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link IngredientsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link IngredientsFragment#newInstance} factory method to
  * create an instance of this fragment.
