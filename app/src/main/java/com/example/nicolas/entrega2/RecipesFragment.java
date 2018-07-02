@@ -13,12 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.nicolas.entrega2.db.AppDatabase;
 import com.example.nicolas.entrega2.db.Ingredient;
 import com.example.nicolas.entrega2.db.Recipe;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,10 +48,7 @@ public class RecipesFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
-
     public RecipesFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -82,7 +82,7 @@ public class RecipesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ingredients, container, false);
+        return inflater.inflate(R.layout.fragment_recipes, container, false);
     }
 
     @Override
@@ -90,6 +90,13 @@ public class RecipesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         db = AppDatabase.getDatabase(getActivity());
         lv = (ListView) getView().findViewById(R.id.List);
+        onClickEvent(view);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -121,33 +128,19 @@ public class RecipesFragment extends Fragment {
                 });
             }
         }) .start();
+
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    private void onClickEvent(View view) {
+
+        Button add_recipe = (Button) view.findViewById(R.id.add_recipe_button);
+        add_recipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AddNewRecipe.class);
+                startActivity(intent);
+            }
+        });
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

@@ -18,6 +18,9 @@ public interface IngredientDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Ingredient... ingredients);
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    long insert(Ingredient ingredient);
+
     @Query("DELETE FROM ingredient")
     void deleteAll();
 }

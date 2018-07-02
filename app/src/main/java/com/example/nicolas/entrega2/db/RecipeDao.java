@@ -18,6 +18,9 @@ public interface RecipeDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Recipe... recipes);
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    long insert(Recipe recipe);
+
     @Query("DELETE FROM recipe")
     void deleteAll();
 }

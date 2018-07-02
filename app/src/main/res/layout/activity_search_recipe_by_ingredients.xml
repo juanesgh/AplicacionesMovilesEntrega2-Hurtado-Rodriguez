@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search_recipes_by_ingredients">
+    tools:context=".SearchRecipeByIngredients">
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextView"
