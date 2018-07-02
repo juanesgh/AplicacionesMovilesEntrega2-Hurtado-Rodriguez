@@ -74,5 +74,12 @@ public class SearchRecipesFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        view.findViewById(R.id.Search_Nationality).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SearchRecipeByNationality.class);
+                startActivity(intent);
+            }
+        });
     }
 }

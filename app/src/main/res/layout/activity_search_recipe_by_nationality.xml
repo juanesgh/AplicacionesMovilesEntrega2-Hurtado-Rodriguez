@@ -4,15 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchRecipeByPreparationTime">
+    tools:context=".SearchRecipeByNationality">
 
     <Spinner
-        android:id="@+id/spinnerTime"
-        android:layout_width="134dp"
+        android:id="@+id/spinnerNations"
+        android:layout_width="150dp"
         android:layout_height="30dp"
+        android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginRight="96dp"
         android:layout_marginTop="20dp" />
+
+
+    <ListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/spinnerNations" />
 
     <TextView
         android:id="@+id/textView8"
@@ -20,15 +29,8 @@
         android:layout_height="31dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="23dp"
-        android:layout_toLeftOf="@+id/spinnerTime"
-        android:text="Select Time: "
-        android:textSize="16dp" />
-
-    <ListView
-        android:id="@+id/list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="15dp"
-        android:layout_below="@+id/spinnerTime" />
+        android:layout_toLeftOf="@+id/spinnerNations"
+        android:text="Select Nationality: "
+        android:textSize="13dp" />
 
 </RelativeLayout>

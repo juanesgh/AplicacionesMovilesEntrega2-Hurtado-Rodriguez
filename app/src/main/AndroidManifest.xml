@@ -23,7 +23,8 @@
         <activity android:name=".DisplayRecipeRegular" />
         <activity android:name=".AddNewRecipe" />
         <activity android:name=".SearchRecipeByName" />
-        <activity android:name=".SearchRecipeByPreparationTime"></activity>
+        <activity android:name=".SearchRecipeByPreparationTime" />
+        <activity android:name=".SearchRecipeByNationality"></activity>
     </application>
 
 </manifest>

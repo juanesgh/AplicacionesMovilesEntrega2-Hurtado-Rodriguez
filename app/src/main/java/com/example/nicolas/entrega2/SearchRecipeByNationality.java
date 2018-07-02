@@ -17,7 +17,7 @@ import com.example.nicolas.entrega2.db.Recipe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchRecipeByPreparationTime extends AppCompatActivity {
+public class SearchRecipeByNationality extends AppCompatActivity {
     private AppDatabase db;
     private Spinner sp;
     private ListView lv;
@@ -25,16 +25,15 @@ public class SearchRecipeByPreparationTime extends AppCompatActivity {
     private ArrayList<String> namesList;
     private List<Integer> idsList;
 
-    private Integer low;
-    private Integer high;
+    private String searchNation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_recipe_by_preparation_time);
+        setContentView(R.layout.activity_search_recipe_by_nationality);
         db = AppDatabase.getDatabase(getApplicationContext());
 
-        sp = (Spinner) findViewById(R.id.spinnerTime);
+        sp = (Spinner) findViewById(R.id.spinnerNations);
         lv = (ListView) findViewById(R.id.list_view);
 
         namesList = new ArrayList<>();
@@ -46,11 +45,11 @@ public class SearchRecipeByPreparationTime extends AppCompatActivity {
 
     private void fillSpinner() {
         List<String> spinnerArray =  new ArrayList<String>();
-        spinnerArray.add("Time Length");
-        spinnerArray.add("<30 mins");
-        spinnerArray.add("30-60 mins");
-        spinnerArray.add("1-2 hrs");
-        spinnerArray.add(">2 hrs");
+        spinnerArray.add("Nationality");
+        spinnerArray.add("Italian");
+        spinnerArray.add("Chinese");
+        spinnerArray.add("French");
+        spinnerArray.add("Spanish");
 
         ArrayAdapter<String> spadapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, spinnerArray);
@@ -63,30 +62,13 @@ public class SearchRecipeByPreparationTime extends AppCompatActivity {
         sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                String spSelected = sp.getSelectedItem().toString();
-                if (!"Time Length".equals(spSelected)){
-                    if ("<30 mins".equals(spSelected)){
-                        low = 0;
-                        high = 30;
-                    }
-                    else if ("30-60 mins".equals(spSelected)){
-                        low = 30;
-                        high = 60;
-                    }
-                    else if ("1-2 hrs".equals(spSelected)){
-                        low = 60;
-                        high = 120;
-                    }
-                    else if (">2 hrs".equals(spSelected)){
-                        low = 120;
-                        high = 4320;
-                    }
-
+                final String spSelected = sp.getSelectedItem().toString();
+                if (!"Nationality".equals(spSelected)){
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
                             //Consulta a la base de datos.
-                            final List<Recipe> recipes = db.recipeDao().fetchRecipesbyTime(low,high);
+                            final List<Recipe> recipes = db.recipeDao().fetchRecipesbyNationality(spSelected);
 
                             if (recipes.size() > 0) {
                                 namesList.clear();
@@ -121,7 +103,7 @@ public class SearchRecipeByPreparationTime extends AppCompatActivity {
                                 mainHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getApplicationContext(), "Couldn't find any Recipes that matched the time frame." ,
+                                        Toast.makeText(getApplicationContext(), "Couldn't find any Recipes that matched the selected Nationality." ,
                                                 Toast.LENGTH_LONG).show();
                                     }
                                 });
