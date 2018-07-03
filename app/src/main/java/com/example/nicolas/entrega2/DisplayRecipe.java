@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class DisplayRecipe extends AppCompatActivity {
     private TextView tvS;
     private TextView tvPT;
     private TextView tvN;
+    private Button fB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class DisplayRecipe extends AppCompatActivity {
         tvS = (TextView) findViewById(R.id.tvServings);
         tvPT = (TextView) findViewById(R.id.tvPreparationTime);
         tvN = (TextView) findViewById(R.id.tvNationality);
+        fB = (Button) findViewById(R.id.favoriteButton);
 
         final ArrayList<Integer> ids = (ArrayList<Integer>) getIntent().getSerializableExtra("ingredientIds");
         final String recipeId = (String) getIntent().getStringExtra("recipeId");
@@ -70,6 +73,8 @@ public class DisplayRecipe extends AppCompatActivity {
                     }
                 }
 
+                final Boolean fav = recipe.getFavorite();
+
                 Handler mainHandler = new Handler(getMainLooper());
                 mainHandler.post(new Runnable() {
                     @Override
@@ -86,9 +91,50 @@ public class DisplayRecipe extends AppCompatActivity {
                         else {
                             tvN.setText(nationality);
                         }
+
+                        if (fav){
+                            fB.setText("Remove from Favorites");
+                        }
                     }
                 });
             }
         }) .start();
+
+        fB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        final Recipe recipe = db.recipeDao().fetchOneRecipebyId(Integer.valueOf(recipeId));
+                        final Boolean favAttribute = recipe.getFavorite();
+                        if (favAttribute){
+                            db.recipeDao().update(0,Integer.valueOf(recipeId));
+                        }
+                        else {
+                            db.recipeDao().update(1,Integer.valueOf(recipeId));
+                        }
+
+                        Handler mainHandler = new Handler(getMainLooper());
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (favAttribute){
+                                    fB.setText("Add to Favorites");
+                                    Toast.makeText(getApplicationContext(), "Recipe removed from Favorites." ,
+                                            Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    fB.setText("Remove from Favorites");
+                                    Toast.makeText(getApplicationContext(), "Recipe added to Favorites." ,
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    }
+                }) .start();
+            }
+        });
     }
 }

@@ -113,6 +113,14 @@
                     android:text="Missing Ingredient 1"/>
 
             </LinearLayout>
+
         </LinearLayout>
+        <Button
+            android:id="@+id/favoriteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="30dp"
+            android:text="Add to Favorites"/>
     </LinearLayout>
 </ScrollView>

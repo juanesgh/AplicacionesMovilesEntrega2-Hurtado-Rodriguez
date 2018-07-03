@@ -46,7 +46,7 @@ public class SearchRecipeByPreparationTime extends AppCompatActivity {
 
     private void fillSpinner() {
         List<String> spinnerArray =  new ArrayList<String>();
-        spinnerArray.add("Time Length");
+        spinnerArray.add("Length");
         spinnerArray.add("<30 mins");
         spinnerArray.add("30-60 mins");
         spinnerArray.add("1-2 hrs");
@@ -64,7 +64,7 @@ public class SearchRecipeByPreparationTime extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String spSelected = sp.getSelectedItem().toString();
-                if (!"Time Length".equals(spSelected)){
+                if (!"Length".equals(spSelected)){
                     if ("<30 mins".equals(spSelected)){
                         low = 0;
                         high = 30;

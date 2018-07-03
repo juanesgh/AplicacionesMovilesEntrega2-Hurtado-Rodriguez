@@ -43,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         AppDatabase db = AppDatabase.getDatabase(getApplicationContext());
+
+        fragment = new FavoriteRecipesFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.frame_layout, fragment);
+        ft.commit();
+
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -58,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         } else if (id == R.id.nav_second_fragment) {
                             fragment = new RecipesFragment();
                         } else if (id == R.id.nav_third_fragment) {
-                            fragment = new IngredientsFragment();
+                            fragment = new FavoriteRecipesFragment();
                         }
 
                         if (fragment != null) {

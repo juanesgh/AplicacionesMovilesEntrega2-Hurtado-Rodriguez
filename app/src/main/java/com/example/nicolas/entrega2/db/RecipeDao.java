@@ -24,11 +24,17 @@ public interface RecipeDao {
     @Query("SELECT * FROM recipe WHERE nationality LIKE :nationality ")
     List<Recipe> fetchRecipesbyNationality (String nationality);
 
+    @Query("SELECT * FROM recipe WHERE favorite = 1 ")
+    List<Recipe> fetchFavoriteRecipes ();
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Recipe... recipes);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long insert(Recipe recipe);
+
+    @Query("UPDATE recipe SET favorite= :fav WHERE id = :id")
+    void update(int fav, int id);
 
     @Query("DELETE FROM recipe")
     void deleteAll();

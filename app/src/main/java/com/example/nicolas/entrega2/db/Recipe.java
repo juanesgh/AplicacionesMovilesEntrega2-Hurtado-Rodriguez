@@ -29,11 +29,16 @@ public class Recipe {
     @NonNull
     private Integer preparation_time;
 
+    @ColumnInfo(name = "favorite")
+    @NonNull
+    private Boolean favorite;
+
     public Recipe(String name, String description, Integer servings, Integer preparation_time) {
         this.name = name;
         this.description = description;
         this.servings = servings;
         this.preparation_time = preparation_time;
+        this.favorite = false;
     }
 
     public void setId(int id) {
@@ -76,11 +81,13 @@ public class Recipe {
         return servings;
     }
 
-    public void setPreparation_time(Integer preparation_time) {
-        this.preparation_time = preparation_time;
-    }
+    public void setPreparation_time(Integer preparation_time) { this.preparation_time = preparation_time; }
 
     public Integer getPreparation_time() {
         return preparation_time;
     }
+
+    public void setFavorite(Boolean favorite) { this.favorite = favorite; }
+    
+    public Boolean getFavorite() { return favorite; }
 }
