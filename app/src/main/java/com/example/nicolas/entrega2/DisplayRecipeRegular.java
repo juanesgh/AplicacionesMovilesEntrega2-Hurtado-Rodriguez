@@ -1,5 +1,7 @@
 package com.example.nicolas.entrega2;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import com.example.nicolas.entrega2.db.Ingredient;
 import com.example.nicolas.entrega2.db.Recipe;
 import com.example.nicolas.entrega2.db.RecipeIngredient;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +32,10 @@ public class DisplayRecipeRegular extends AppCompatActivity {
     private TextView tvN;
     private Button fB;
     private Button dB;
-
+    private ImageView imV;
+    private Boolean favoriteAtt;
     private Recipe recipe;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,7 @@ public class DisplayRecipeRegular extends AppCompatActivity {
         tvN = (TextView) findViewById(R.id.tvNationality);
         fB = (Button) findViewById(R.id.favoriteButton);
         dB = (Button) findViewById(R.id.deleteButton);
+        imV = (ImageView) findViewById(R.id.image_view);
 
         final String recipeId = (String) getIntent().getStringExtra("recipeId");
         final String manage = (String) getIntent().getStringExtra("manage");
@@ -63,14 +70,14 @@ public class DisplayRecipeRegular extends AppCompatActivity {
                 Integer preparationTime = recipe.getPreparation_time();
                 final String preparationText = "Preparation Time: " + String.valueOf(preparationTime) + " minutes.";
                 final String nationality = "Nationality: " + recipe.getNationality();
+                final String imgPath = recipe.getImage_path();
+                favoriteAtt = recipe.getFavorite();
                 List<RecipeIngredient> recipeIngredients = db.recipeIngredientDao().fetchIngredientsByRecipeId(Integer.valueOf(recipeId));
                 final StringBuilder ingredients = new StringBuilder();
                 for (int i=0; i<recipeIngredients.size(); i++) {
                     Ingredient auxi = db.ingredientDao().fetchOneIngredientbyId(recipeIngredients.get(i).getIngredientId());
                     ingredients.append("-"+auxi.getName() + "\n");
                 }
-
-                final Boolean fav = recipe.getFavorite();
 
                 Handler mainHandler = new Handler(getMainLooper());
                 mainHandler.post(new Runnable() {
@@ -81,6 +88,7 @@ public class DisplayRecipeRegular extends AppCompatActivity {
                         tvI.setText(ingredients);
                         tvS.setText(servingsText);
                         tvPT.setText(preparationText);
+
                         if (recipe.getNationality() == null){
                             tvN.setVisibility(View.GONE);
                         }
@@ -88,7 +96,22 @@ public class DisplayRecipeRegular extends AppCompatActivity {
                             tvN.setText(nationality);
                         }
 
-                        if (fav){
+                        if (imgPath != null) {
+                            File imgFile = new File(imgPath);
+
+                            if (imgFile.exists()) {
+                                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                imV.setImageBitmap(myBitmap);
+                            }
+                            else{
+                                imV.setVisibility(View.GONE);
+                            }
+                        }
+                        else {
+                            imV.setVisibility(View.GONE);
+                        }
+
+                        if (favoriteAtt){
                             fB.setText("Remove from Favorites");
                         }
                     }
@@ -102,27 +125,27 @@ public class DisplayRecipeRegular extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-
-                        final Boolean favAttribute = recipe.getFavorite();
-                        if (favAttribute){
+                        if (favoriteAtt){
                             db.recipeDao().update(0,Integer.valueOf(recipeId));
+                            favoriteAtt = false;
                         }
                         else {
                             db.recipeDao().update(1,Integer.valueOf(recipeId));
+                            favoriteAtt = true;
                         }
 
                         Handler mainHandler = new Handler(getMainLooper());
                         mainHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (favAttribute){
-                                    fB.setText("Add to Favorites");
-                                    Toast.makeText(getApplicationContext(), "Recipe removed from Favorites." ,
+                                if (favoriteAtt){
+                                    fB.setText("Remove from Favorites");
+                                    Toast.makeText(getApplicationContext(), "Recipe added to Favorites." ,
                                             Toast.LENGTH_LONG).show();
                                 }
                                 else {
-                                    fB.setText("Remove from Favorites");
-                                    Toast.makeText(getApplicationContext(), "Recipe added to Favorites." ,
+                                    fB.setText("Add to Favorites");
+                                    Toast.makeText(getApplicationContext(), "Recipe removed from Favorites." ,
                                             Toast.LENGTH_LONG).show();
                                 }
                             }

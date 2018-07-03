@@ -1,8 +1,17 @@
 package com.example.nicolas.entrega2;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -20,6 +30,8 @@ import com.example.nicolas.entrega2.db.Ingredient;
 import com.example.nicolas.entrega2.db.Recipe;
 import com.example.nicolas.entrega2.db.RecipeIngredient;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -30,6 +42,7 @@ public class AddNewRecipe extends AppCompatActivity {
     private List<Integer> ingredientIdList;
     private List<Integer> addIngredientIdsList;
     private List<String> addIngredientNamesList;
+    private String imgPath;
 
     private Spinner sp;
     private AutoCompleteTextView actv;
@@ -41,6 +54,9 @@ public class AddNewRecipe extends AppCompatActivity {
     private EditText etS;
 
     private AppDatabase db;
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private ImageView imV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +81,9 @@ public class AddNewRecipe extends AppCompatActivity {
         etPT = (EditText) findViewById(R.id.etPreparationTime);
         etS = (EditText) findViewById(R.id.etServings);
 
+        imV = (ImageView) findViewById(R.id.image_view);
+
+        imgPath = "";
 
         fillSpinner();
         loadAutoCompleteTextView();
@@ -166,6 +185,9 @@ public class AddNewRecipe extends AppCompatActivity {
                         if (!"None".equals(sp.getSelectedItem().toString())){
                             newRecipe.setNationality(sp.getSelectedItem().toString());
                         }
+                        if (!"".equals(imgPath)){
+                            newRecipe.setImage_path(imgPath);
+                        }
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -201,6 +223,70 @@ public class AddNewRecipe extends AppCompatActivity {
                 }
             }
         });
+
+        findViewById(R.id.add_photo_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Pide permiso para tomar fotos.
+                ActivityCompat.requestPermissions(AddNewRecipe.this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        1);
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //Si acepta o ya tiene permiso para utilizar camara, se inicia la camara.
+                    dispatchTakePictureIntent();
+                } else {
+                    Toast.makeText(AddNewRecipe.this, "Permission denied to write on your External storage", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    //Inicia camara.
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    //Carga la foto tomada en el ImageView.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imV.setImageBitmap(imageBitmap);
+
+            Uri tempUri = getImageUri(getApplicationContext(), imageBitmap);
+            String finalPath = getRealPathFromURI(tempUri);
+
+            imgPath = finalPath;
+        }
+    }
+
+    //Funciones para conseguir path de la foto tomada.
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    //Funciones para conseguir path de la foto tomada.
+    public String getRealPathFromURI(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+        cursor.moveToFirst();
+        int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+        return cursor.getString(idx);
     }
 
     //Funcion que carga los ingredientes en el listview de ingredientes.

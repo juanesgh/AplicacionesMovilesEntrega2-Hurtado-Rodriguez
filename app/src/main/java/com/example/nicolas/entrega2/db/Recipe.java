@@ -33,6 +33,9 @@ public class Recipe {
     @NonNull
     private Boolean favorite;
 
+    @ColumnInfo(name = "image_path")
+    private String image_path;
+
     public Recipe(String name, String description, Integer servings, Integer preparation_time) {
         this.name = name;
         this.description = description;
@@ -90,4 +93,8 @@ public class Recipe {
     public void setFavorite(Boolean favorite) { this.favorite = favorite; }
     
     public Boolean getFavorite() { return favorite; }
+
+    public void setImage_path(String image_path) { this.image_path = image_path; }
+
+    public String getImage_path() { return image_path; }
 }
