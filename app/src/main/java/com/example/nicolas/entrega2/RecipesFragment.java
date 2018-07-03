@@ -120,6 +120,7 @@ public class RecipesFragment extends Fragment {
                             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                                 Intent intent = new Intent(getActivity(), DisplayRecipeRegular.class);
                                 intent.putExtra("recipeId", String.valueOf(recipeIds.get(i)));
+                                intent.putExtra("manage", "1");
                                 startActivity(intent);
                             }
                         });

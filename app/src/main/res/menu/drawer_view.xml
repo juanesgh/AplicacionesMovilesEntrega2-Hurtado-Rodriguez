@@ -7,7 +7,7 @@
             android:title="Search Recipes" />
         <item
             android:id="@+id/nav_second_fragment"
-            android:title="All Recipes" />
+            android:title="Manage Recipes" />
         <item
             android:id="@+id/nav_third_fragment"
             android:title="Favorite Recipes" />

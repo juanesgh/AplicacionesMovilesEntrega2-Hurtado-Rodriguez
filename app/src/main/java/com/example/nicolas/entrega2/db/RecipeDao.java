@@ -1,6 +1,7 @@
 package com.example.nicolas.entrega2.db;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
@@ -35,6 +36,9 @@ public interface RecipeDao {
 
     @Query("UPDATE recipe SET favorite= :fav WHERE id = :id")
     void update(int fav, int id);
+
+    @Delete
+    void deleteRecipe(Recipe recipe);
 
     @Query("DELETE FROM recipe")
     void deleteAll();

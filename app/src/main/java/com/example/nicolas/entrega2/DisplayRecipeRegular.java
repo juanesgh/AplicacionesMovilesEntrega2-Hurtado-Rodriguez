@@ -27,6 +27,9 @@ public class DisplayRecipeRegular extends AppCompatActivity {
     private TextView tvPT;
     private TextView tvN;
     private Button fB;
+    private Button dB;
+
+    private Recipe recipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +43,19 @@ public class DisplayRecipeRegular extends AppCompatActivity {
         tvPT = (TextView) findViewById(R.id.tvPreparationTime);
         tvN = (TextView) findViewById(R.id.tvNationality);
         fB = (Button) findViewById(R.id.favoriteButton);
+        dB = (Button) findViewById(R.id.deleteButton);
 
         final String recipeId = (String) getIntent().getStringExtra("recipeId");
+        final String manage = (String) getIntent().getStringExtra("manage");
+        if (!"1".equals(manage)){
+            dB.setVisibility(View.GONE);
+        }
+
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                final Recipe recipe = db.recipeDao().fetchOneRecipebyId(Integer.valueOf(recipeId));
+                recipe = db.recipeDao().fetchOneRecipebyId(Integer.valueOf(recipeId));
                 final String title = recipe.getName();
                 final String description = recipe.getDescription();
                 Integer servings = recipe.getServings();
@@ -94,7 +103,6 @@ public class DisplayRecipeRegular extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        final Recipe recipe = db.recipeDao().fetchOneRecipebyId(Integer.valueOf(recipeId));
                         final Boolean favAttribute = recipe.getFavorite();
                         if (favAttribute){
                             db.recipeDao().update(0,Integer.valueOf(recipeId));
@@ -117,6 +125,26 @@ public class DisplayRecipeRegular extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), "Recipe added to Favorites." ,
                                             Toast.LENGTH_LONG).show();
                                 }
+                            }
+                        });
+                    }
+                }) .start();
+            }
+        });
+
+        dB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        db.recipeDao().deleteRecipe(recipe);
+                        Handler mainHandler = new Handler(getMainLooper());
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
                             }
                         });
                     }
