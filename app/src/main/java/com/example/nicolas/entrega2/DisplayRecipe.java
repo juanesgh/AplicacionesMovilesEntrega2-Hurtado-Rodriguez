@@ -1,5 +1,6 @@
 package com.example.nicolas.entrega2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -107,7 +108,14 @@ public class DisplayRecipe extends AppCompatActivity {
                                 imV.setImageBitmap(myBitmap);
                             }
                             else{
-                                imV.setVisibility(View.GONE);
+                                Context context = imV.getContext();
+                                int id = context.getResources().getIdentifier(imgPath, "drawable", context.getPackageName());
+                                if (id != 0) {
+                                    imV.setImageResource(id);
+                                }
+                                else {
+                                    imV.setVisibility(View.GONE);
+                                }
                             }
                         }
                         else {
