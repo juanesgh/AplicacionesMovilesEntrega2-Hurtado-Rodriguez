@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionbar = getSupportActionBar();
         actionbar.setDisplayHomeAsUpEnabled(true);
         actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        actionbar.setTitle("Recipedia");
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
@@ -54,11 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         menuItem.setChecked(true);
-
-
-
                         int id = menuItem.getItemId();
-
                         if (id == R.id.nav_first_fragment) {
                             fragment = new SearchRecipesFragment();
                         } else if (id == R.id.nav_second_fragment) {
@@ -72,14 +69,7 @@ public class MainActivity extends AppCompatActivity {
                             ft.replace(R.id.frame_layout, fragment);
                             ft.commit();
                         }
-
-
-
-                        // close drawer when item is tapped
                         mDrawerLayout.closeDrawers();
-
-                        // Add code here to update the UI based on the item selected
-                        // For example, swap UI fragments here
 
                         return true;
                     }

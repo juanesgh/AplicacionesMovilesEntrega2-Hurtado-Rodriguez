@@ -1,8 +1,10 @@
 package com.example.nicolas.entrega2;
 
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.example.nicolas.entrega2.db.Recipe;
 import com.example.nicolas.entrega2.db.RecipeIngredient;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +38,7 @@ public class DisplayRecipeRegular extends AppCompatActivity {
     private ImageView imV;
     private Boolean favoriteAtt;
     private Recipe recipe;
+    private String title;
 
 
     @Override
@@ -63,7 +67,7 @@ public class DisplayRecipeRegular extends AppCompatActivity {
             public void run() {
 
                 recipe = db.recipeDao().fetchOneRecipebyId(Integer.valueOf(recipeId));
-                final String title = recipe.getName();
+                title = recipe.getName();
                 final String description = recipe.getDescription();
                 Integer servings = recipe.getServings();
                 final String servingsText = "Servings: " + String.valueOf(servings);
@@ -158,20 +162,35 @@ public class DisplayRecipeRegular extends AppCompatActivity {
         dB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        db.recipeDao().deleteRecipe(recipe);
-                        Handler mainHandler = new Handler(getMainLooper());
-                        mainHandler.post(new Runnable() {
+                AlertDialog.Builder altdial = new AlertDialog.Builder(DisplayRecipeRegular.this);
+                altdial.setMessage("Are you sure you want to delete the recipe: '"+title+"'?").setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
-                            public void run() {
-                                finish();
+                            public void onClick(DialogInterface dialog, int which) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        db.recipeDao().deleteRecipe(recipe);
+                                        Handler mainHandler = new Handler(getMainLooper());
+                                        mainHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                finish();
+                                            }
+                                        });
+                                    }
+                                }).start();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
                             }
                         });
-                    }
-                }) .start();
+                AlertDialog alert = altdial.create();
+                alert.setTitle("Delete Recipe?");
+                alert.show();
             }
         });
     }

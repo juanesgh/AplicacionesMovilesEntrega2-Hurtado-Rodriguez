@@ -353,7 +353,7 @@ public class AddNewRecipe extends AppCompatActivity {
                         }
                     });
             AlertDialog alert = altdial.create();
-            alert.setTitle("Add Ingredient");
+            alert.setTitle("Add Ingredient?");
             alert.show();
         }
     }
